@@ -7,20 +7,15 @@ import org.springframework.stereotype.Component;
 import java.util.function.Function;
 
 @Component
-public class CriticalDeliveryStream
+public class TestStream
 {
 
     @Bean
-    public Function<String, String> criticaldelivery() {
+    public Function<String, String> toLowerCase() {
         return delivery -> {
             System.out.println(delivery);
             return delivery.toLowerCase();
         };
     }
-
-
-
-
-
 
 }

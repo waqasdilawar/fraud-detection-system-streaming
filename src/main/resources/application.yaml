@@ -1,13 +1,13 @@
 spring:
   cloud:
     function:
-      definition: criticaldelivery
+      definition: toLowerCase
     stream:
       bindings:
-        criticaldelivery-in-0:
+        toLowerCase-in-0:
           destination: test
 #          contentType: application/json
-        criticaldelivery-out-0:
+        toLowerCase-out-0:
           destination: ticket
  #         contentType: application/json
 
