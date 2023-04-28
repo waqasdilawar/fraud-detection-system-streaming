@@ -1,0 +1,16 @@
+spring:
+  cloud:
+    function:
+      definition: criticaldelivery
+    stream:
+      bindings:
+        criticaldelivery-in-0:
+          destination: test
+#          contentType: application/json
+        criticaldelivery-out-0:
+          destination: ticket
+ #         contentType: application/json
+
+  kafka:
+    streams:
+      application-id: fds
