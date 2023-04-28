@@ -1,13 +1,13 @@
 spring:
   cloud:
     function:
-      definition: toLowerCase
+      definition: toLowerCase|echo
     stream:
       bindings:
-        toLowerCase-in-0:
+        toLowerCase|echo-in-0:
           destination: test
 #          contentType: application/json
-        toLowerCase-out-0:
+        toLowerCase|echo-out-0:
           destination: ticket
  #         contentType: application/json
 

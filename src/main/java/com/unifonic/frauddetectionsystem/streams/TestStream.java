@@ -13,8 +13,15 @@ public class TestStream
     @Bean
     public Function<String, String> toLowerCase() {
         return delivery -> {
-            System.out.println(delivery);
             return delivery.toLowerCase();
+        };
+    }
+
+    @Bean
+    public Function<String, String> echo() {
+        return v -> {
+            System.out.println("Echo: " + v);
+            return v;
         };
     }
 
