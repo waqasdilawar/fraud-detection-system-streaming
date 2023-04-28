@@ -10,6 +10,12 @@ spring:
         toLowerCase|echo-out-0:
           destination: ticket
  #         contentType: application/json
+        toTable-in-0:
+          destination: test
+#          contentType: application/json
+        toTable-out-0:
+          destination: word_count
+ #         contentType: application/json
 
   kafka:
     streams:
