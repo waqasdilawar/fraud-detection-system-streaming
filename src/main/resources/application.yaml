@@ -24,10 +24,10 @@ spring:
  #         contentType: application/json
         process-in-0:
           destination: profanity_check
-#          contentType: application/json
+          contentType: application/json
         process-in-1:
           destination: profanity_words
-#          contentType: application/json
+          contentType: application/json
         process-out-0:
           destination: profanity_result
  #         contentType: application/json

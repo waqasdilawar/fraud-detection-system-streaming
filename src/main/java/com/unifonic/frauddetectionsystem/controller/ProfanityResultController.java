@@ -1,5 +1,6 @@
 package com.unifonic.frauddetectionsystem.controller;
 
+import com.unifonic.frauddetectionsystem.model.ProfanityWord;
 import org.apache.kafka.streams.state.QueryableStoreTypes;
 import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +19,11 @@ public class ProfanityResultController {
   private InteractiveQueryService interactiveQueryService;
 
   @GetMapping("{key}")
-  public ResponseEntity<String> get(@PathVariable String key){
-    final ReadOnlyKeyValueStore<String, String> songStore =
-            interactiveQueryService.getQueryableStore("profanity_words_table", QueryableStoreTypes.<String, String>keyValueStore());
+  public ResponseEntity<ProfanityWord> get(@PathVariable String key){
+    final ReadOnlyKeyValueStore<String, ProfanityWord> songStore =
+            interactiveQueryService.getQueryableStore("profanity_words_table", QueryableStoreTypes.<String, ProfanityWord>keyValueStore());
     songStore.all().forEachRemaining(stringStringKeyValue -> {
-      System.out.println(stringStringKeyValue);
+      System.out.println(stringStringKeyValue.value);
     });
     return ResponseEntity.ok(songStore.get(key));
 
