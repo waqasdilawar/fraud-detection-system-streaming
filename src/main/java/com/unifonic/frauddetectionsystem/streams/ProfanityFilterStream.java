@@ -3,13 +3,12 @@ package com.unifonic.frauddetectionsystem.streams;
 import com.unifonic.frauddetectionsystem.model.ProfanityWord;
 import com.unifonic.frauddetectionsystem.model.ProfanityWordCheck;
 import com.unifonic.frauddetectionsystem.model.ProfanityWordSplit;
+import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KeyValue;
-import org.apache.kafka.streams.kstream.Grouped;
-import org.apache.kafka.streams.kstream.Joined;
-import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.KTable;
+import org.apache.kafka.streams.kstream.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
 import java.util.function.BiFunction;
@@ -18,10 +17,10 @@ import java.util.function.BiFunction;
 public class ProfanityFilterStream {
 
   @Bean
-  public BiFunction<KStream<String, ProfanityWordCheck>, KTable<String, ProfanityWord>, KStream<String, ProfanityWordResult>> process() {
+  public BiFunction<KStream<String, ProfanityWordCheck>, KTable<String, ProfanityWord>, KStream<String, ProfanityWordResult.SmsSmsRecipientStatusAggregator>> process() {
     return (inputTextStream, blockWordsTable) -> (inputTextStream
             .flatMapValues((readOnlyKey, value) -> Arrays.asList(value.getWord().split("\\s+"))
-                    .stream().distinct().map(s -> new ProfanityWordSplit(s, value))
+                    .stream().map(s -> new ProfanityWordSplit(s, value))
                     .toList())
             .map((key, value) -> KeyValue.pair(value.getWord(), value))
             .join(blockWordsTable, (readOnlyKey, value1, value2) -> new ProfanityWordResult(value1, value2),
@@ -36,10 +35,26 @@ public class ProfanityFilterStream {
             })
             .peek((key, value) -> System.out.println(key + " value:" + value.getProfanityCheckText().getWord()))
             //.groupBy((key, value) -> value.getProfanityCheckText().getProfanityWordCheck().getWord())
-            .groupBy((key, value) -> value.getProfanityCheckText().getProfanityWordCheck().getWord(), Grouped.valueSerde(new ProfanityWordResult()))
+            .toTable(Materialized.with(Serdes.String(), new ProfanityWordResult()))
+            .groupBy((key, value) -> {
+             return KeyValue.pair(value.getProfanityCheckText().getProfanityWordCheck().getWord(),value);
+            }, Grouped.valueSerde(new ProfanityWordResult()))
             //TODO we need to aggregate the ProfanityWords because it's returning only the latest value
-            .reduce((value1, value2) -> value2)
+            .aggregate(ProfanityWordResult.SmsSmsRecipientStatusAggregator::new, (key, value, aggregate) -> {
+              if (key != null)
+              {
+                aggregate.adder(value);
+              }
+              return aggregate;
+            }, (key, value, agg) -> {
+                      agg.remover(value);
+                      return agg;
+                    },
+                    Materialized.with(Serdes.String(), new ProfanityWordResult.SmsSmsRecipientStatusAggregator()))
             .toStream()
-            .peek((key, value) -> System.out.println(key + " value:" + value.getProfanityCheckText().getWord())));
+            .filter((key, value) -> value != null && !CollectionUtils.isEmpty(value.getSmsSmsRecipientStatusModels()))
+            .peek((key, value) -> {
+              System.out.println(key + " value:" + value.getSmsSmsRecipientStatusModels().iterator().next().getProfanityCheckText().getWord());
+            }));
   }
 }
