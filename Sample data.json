@@ -13,5 +13,59 @@
     {
       "word": "Gun is a dangerous thing"
     }
+  ],
+  "profanityWordsResult": [
+    {
+      "smsSmsRecipientStatusModels": [
+        {
+          "profanityCheckText": {
+            "word": "Bad",
+            "profanityWordCheck": {
+              "word": "Bad and Gun with another Gun",
+              "type": null,
+              "country": null,
+              "global": null,
+              "account": null,
+              "subAccount": null,
+              "senderId": null
+            }
+          },
+          "profanityWord": {
+            "id": "a3ef22d3-ee20-4bc6-b602-75817033284d",
+            "word": "Bad",
+            "type": null,
+            "country": null,
+            "global": null,
+            "account": null,
+            "subAccount": null,
+            "senderId": null
+          }
+        },
+        {
+          "profanityCheckText": {
+            "word": "Gun",
+            "profanityWordCheck": {
+              "word": "Bad and Gun with another Gun",
+              "type": null,
+              "country": null,
+              "global": null,
+              "account": null,
+              "subAccount": null,
+              "senderId": null
+            }
+          },
+          "profanityWord": {
+            "id": "f6028add-190d-43d2-bc78-f896c0f8f361",
+            "word": "Gun",
+            "type": null,
+            "country": null,
+            "global": null,
+            "account": null,
+            "subAccount": null,
+            "senderId": null
+          }
+        }
+      ]
+    }
   ]
 }

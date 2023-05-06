@@ -39,7 +39,6 @@ public class ProfanityFilterStream {
             .groupBy((key, value) -> {
              return KeyValue.pair(value.getProfanityCheckText().getProfanityWordCheck().getWord(),value);
             }, Grouped.valueSerde(new ProfanityWordResult()))
-            //TODO we need to aggregate the ProfanityWords because it's returning only the latest value
             .aggregate(ProfanityWordResult.SmsSmsRecipientStatusAggregator::new, (key, value, aggregate) -> {
               if (key != null)
               {
