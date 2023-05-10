@@ -28,31 +28,31 @@ public class ProfanityWordResult extends JsonSerde<ProfanityWordResult> {
     return profanityWord;
   }
 
-  public static class SmsSmsRecipientStatusAggregator extends JsonSerde<SmsSmsRecipientStatusAggregator>
+  public static class ProfanityResultAggregator extends JsonSerde<ProfanityResultAggregator>
   {
-    List<ProfanityWordResult> smsSmsRecipientStatusModels;
+    List<ProfanityWordResult> profanityWordResults;
 
-    public SmsSmsRecipientStatusAggregator()
+    public ProfanityResultAggregator()
     {
-      this.smsSmsRecipientStatusModels = new ArrayList<>();
+      this.profanityWordResults = new ArrayList<>();
     }
 
-    public void adder(ProfanityWordResult smsSmsRecipientStatusModel)
+    public void adder(ProfanityWordResult profanityWordResultAdder)
     {
-      if (smsSmsRecipientStatusModel != null)
+      if (profanityWordResultAdder != null)
       {
-        this.smsSmsRecipientStatusModels.add(smsSmsRecipientStatusModel);
+        this.profanityWordResults.add(profanityWordResultAdder);
       }
     }
 
-    public void remover(ProfanityWordResult kSmsSmsRecipientStatusModel)
-    {
-      this.smsSmsRecipientStatusModels.removeIf(smsModel -> Objects.equals(smsModel.getProfanityCheckText().getProfanityWordCheck().getWord(),
-              kSmsSmsRecipientStatusModel.getProfanityCheckText().getProfanityWordCheck().getWord()));
+    public void remover(ProfanityWordResult profanityWordResultRemover) {
+      this.profanityWordResults.removeIf(profanityWordResult -> Objects.equals(profanityWordResult.getProfanityCheckText()
+                      .getProfanityWordCheck().getWord(),
+              profanityWordResultRemover.getProfanityCheckText().getProfanityWordCheck().getWord()));
     }
 
-    public List<ProfanityWordResult> getSmsSmsRecipientStatusModels() {
-      return smsSmsRecipientStatusModels;
+    public List<ProfanityWordResult> getProfanityWordResults() {
+      return profanityWordResults;
     }
   }
 }

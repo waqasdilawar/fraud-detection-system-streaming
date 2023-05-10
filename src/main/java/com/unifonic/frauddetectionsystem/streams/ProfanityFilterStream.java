@@ -17,7 +17,8 @@ import java.util.function.BiFunction;
 public class ProfanityFilterStream {
 
   @Bean
-  public BiFunction<KStream<String, ProfanityWordCheck>, KTable<String, ProfanityWord>, KStream<String, ProfanityWordResult.SmsSmsRecipientStatusAggregator>> process() {
+  public BiFunction<KStream<String, ProfanityWordCheck>, KTable<String, ProfanityWord>,
+          KStream<String, ProfanityWordResult.ProfanityResultAggregator>> process() {
     return (inputTextStream, blockWordsTable) -> (inputTextStream
             .flatMapValues((readOnlyKey, value) -> Arrays.asList(value.getWord().split("\\s+"))
                     .stream().map(s -> new ProfanityWordSplit(s, value))
@@ -34,12 +35,11 @@ public class ProfanityFilterStream {
               } else return false;
             })
             .peek((key, value) -> System.out.println(key + " value:" + value.getProfanityCheckText().getWord()))
-            //.groupBy((key, value) -> value.getProfanityCheckText().getProfanityWordCheck().getWord())
             .toTable(Materialized.with(Serdes.String(), new ProfanityWordResult()))
             .groupBy((key, value) -> {
              return KeyValue.pair(value.getProfanityCheckText().getProfanityWordCheck().getWord(),value);
             }, Grouped.valueSerde(new ProfanityWordResult()))
-            .aggregate(ProfanityWordResult.SmsSmsRecipientStatusAggregator::new, (key, value, aggregate) -> {
+            .aggregate(ProfanityWordResult.ProfanityResultAggregator::new, (key, value, aggregate) -> {
               if (key != null)
               {
                 aggregate.adder(value);
@@ -49,11 +49,11 @@ public class ProfanityFilterStream {
                       agg.remover(value);
                       return agg;
                     },
-                    Materialized.with(Serdes.String(), new ProfanityWordResult.SmsSmsRecipientStatusAggregator()))
+                    Materialized.with(Serdes.String(), new ProfanityWordResult.ProfanityResultAggregator()))
             .toStream()
-            .filter((key, value) -> value != null && !CollectionUtils.isEmpty(value.getSmsSmsRecipientStatusModels()))
+            .filter((key, value) -> value != null && !CollectionUtils.isEmpty(value.getProfanityWordResults()))
             .peek((key, value) -> {
-              System.out.println(key + " value:" + value.getSmsSmsRecipientStatusModels().iterator().next().getProfanityCheckText().getWord());
+              System.out.println(key + " value:" + value.getProfanityWordResults().iterator().next().getProfanityCheckText().getWord());
             }));
   }
 }
