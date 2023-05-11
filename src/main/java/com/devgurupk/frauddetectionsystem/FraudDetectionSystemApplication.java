@@ -1,8 +1,7 @@
-package com.unifonic.frauddetectionsystem;
+package com.devgurupk.frauddetectionsystem;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.kafka.annotation.KafkaListener;
 
 @SpringBootApplication
 public class FraudDetectionSystemApplication {

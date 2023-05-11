@@ -1,9 +1,9 @@
-package com.unifonic.frauddetectionsystem.streams;
+package com.devgurupk.frauddetectionsystem.streams;
 
-import com.unifonic.frauddetectionsystem.model.ProfanityWord;
-import com.unifonic.frauddetectionsystem.model.ProfanityWordCheck;
-import com.unifonic.frauddetectionsystem.model.ProfanityWordResult;
-import com.unifonic.frauddetectionsystem.model.ProfanityWordSplit;
+import com.devgurupk.frauddetectionsystem.model.ProfanityWord;
+import com.devgurupk.frauddetectionsystem.model.ProfanityWordCheck;
+import com.devgurupk.frauddetectionsystem.model.ProfanityWordSplit;
+import com.devgurupk.frauddetectionsystem.model.ProfanityWordResult;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.*;
@@ -21,12 +21,15 @@ public class ProfanityFilterStream {
   public BiFunction<KStream<String, ProfanityWordCheck>, KTable<String, ProfanityWord>,
           KStream<String, ProfanityWordResult.ProfanityResultAggregator>> process() {
     return (inputTextStream, blockWordsTable) -> (inputTextStream
+            //TODO-1 splitText
             .flatMapValues((readOnlyKey, value) -> Arrays.asList(value.getWord().split("\\s+"))
                     .stream().map(s -> new ProfanityWordSplit(s, value))
                     .toList())
+            //TODO-2 createKeyValue
             .map((key, value) -> KeyValue.pair(value.getWord(), value))
             .join(blockWordsTable, (readOnlyKey, value1, value2) -> new ProfanityWordResult(value1, value2),
                     Joined.valueSerde(new ProfanityWordSplit()))
+            //TODO-3 additionalFilters
             .filter((key, value) -> {
               var profanityWord = value.getProfanityWord();
               var profanityCheckText = value.getProfanityCheckText();
@@ -37,6 +40,7 @@ public class ProfanityFilterStream {
             })
             .peek((key, value) -> System.out.println(key + " value:" + value.getProfanityCheckText().getWord()))
             .toTable(Materialized.with(Serdes.String(), new ProfanityWordResult()))
+            //TODO-4 aggregate
             .groupBy((key, value) -> {
              return KeyValue.pair(value.getProfanityCheckText().getProfanityWordCheck().getWord(),value);
             }, Grouped.valueSerde(new ProfanityWordResult()))
@@ -52,6 +56,7 @@ public class ProfanityFilterStream {
                     },
                     Materialized.with(Serdes.String(), new ProfanityWordResult.ProfanityResultAggregator()))
             .toStream()
+            //TODO-5 filter
             .filter((key, value) -> value != null && !CollectionUtils.isEmpty(value.getProfanityWordResults()))
             .peek((key, value) -> {
               System.out.println(key + " value:" + value.getProfanityWordResults().iterator().next().getProfanityCheckText().getWord());

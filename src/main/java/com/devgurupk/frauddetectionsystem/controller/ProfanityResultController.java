@@ -1,6 +1,6 @@
-package com.unifonic.frauddetectionsystem.controller;
+package com.devgurupk.frauddetectionsystem.controller;
 
-import com.unifonic.frauddetectionsystem.model.ProfanityWord;
+import com.devgurupk.frauddetectionsystem.model.ProfanityWord;
 import org.apache.kafka.streams.state.QueryableStoreTypes;
 import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
 import org.springframework.beans.factory.annotation.Autowired;

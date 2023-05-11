@@ -1,4 +1,4 @@
-package com.unifonic.frauddetectionsystem.model;
+package com.devgurupk.frauddetectionsystem.model;
 
 import org.springframework.kafka.support.serializer.JsonSerde;
 
