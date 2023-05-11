@@ -11,8 +11,4 @@ public class FraudDetectionSystemApplication {
 		SpringApplication.run(FraudDetectionSystemApplication.class, args);
 	}
 
-	//@KafkaListener(id = "myId", topics = "word_count")
-	public void listen(String in) {
-		System.out.println(in);
-	}
 }

@@ -2,6 +2,7 @@ package com.unifonic.frauddetectionsystem.streams;
 
 import com.unifonic.frauddetectionsystem.model.ProfanityWord;
 import com.unifonic.frauddetectionsystem.model.ProfanityWordCheck;
+import com.unifonic.frauddetectionsystem.model.ProfanityWordResult;
 import com.unifonic.frauddetectionsystem.model.ProfanityWordSplit;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KeyValue;

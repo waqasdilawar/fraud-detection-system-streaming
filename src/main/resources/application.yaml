@@ -1,7 +1,7 @@
 spring:
   cloud:
     function:
-      definition: toLowerCase|echo;toTable;process
+      definition: process
     stream:
       kafka:
         streams:
@@ -10,18 +10,6 @@ spring:
               consumer:
                 materialized-as: profanity_words_table
       bindings:
-        toLowerCase|echo-in-0:
-          destination: test
-#          contentType: application/json
-        toLowerCase|echo-out-0:
-          destination: ticket
- #         contentType: application/json
-#        toTable-in-0:
- #         destination: profanity_words
-#          contentType: application/json
-#        toTable-out-0:
-#          destination: profanity_words
- #         contentType: application/json
         process-in-0:
           destination: profanity_check
           contentType: application/json
@@ -34,4 +22,4 @@ spring:
 
   kafka:
     streams:
-      application-id: fds_2
+      application-id: fds

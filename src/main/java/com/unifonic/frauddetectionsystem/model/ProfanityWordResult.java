@@ -1,7 +1,5 @@
-package com.unifonic.frauddetectionsystem.streams;
+package com.unifonic.frauddetectionsystem.model;
 
-import com.unifonic.frauddetectionsystem.model.ProfanityWord;
-import com.unifonic.frauddetectionsystem.model.ProfanityWordSplit;
 import org.springframework.kafka.support.serializer.JsonSerde;
 
 import java.util.ArrayList;
